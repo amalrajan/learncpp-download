@@ -1,6 +1,6 @@
 # www.learncpp.com Website Crawler
 
-_The primary aim is demonstrate how to fetch tutorials from www.learncpp.com and store them in PDF format for offline viewing using Python. _
+_The primary aim is demonstrate how to fetch tutorials from www.learncpp.com and store them in PDF format for offline viewing using Python._
 
 ## Important
 

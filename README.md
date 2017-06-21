@@ -22,11 +22,8 @@ You should have Python 3 and the Python launcher installed on your system.
 git clone https://github.com/lollichop/www.learncpp.com-Crawler.git
 cd www.learncpp.cm-Crawler
 ```
-If multiple versions of Python is installed, use:
-`py -3.6 main.py [args]`
-
-Otherwise,
-`python main.py [args]`
+###### If multiple versions of Python is installed, use: `py -3.6 main.py [args]`
+###### Otherwise, `python main.py [args]`
 
 ### Linux
 

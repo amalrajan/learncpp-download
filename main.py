@@ -38,7 +38,7 @@ def get_urls():
 
 def save_as_pdf(url, dest, config):
     # For saving the webpage in PDF format.
-    title = url.split('/')[-2].replace(' ', '_') + '.pdf'
+    title = dest + '\\' + url.split('/')[-2].replace(' ', '_') + '.pdf'
     pdfkit.from_url(url, title, configuration=config)
 
 

@@ -1,16 +1,19 @@
-import urllib.request
-import bs4 as bs
-import platform
 import argparse
-import pdfkit
-import sys
 import os
+import platform
+import sys
+import urllib.request
+
+import bs4 as bs
+import pdfkit
 
 
 def argument_parser():
     parser = argparse.ArgumentParser()
-    parser.add_argument('-o', '--output', default=os.getcwd(), type=str, help="download location")
-    parser.add_argument('--nopdf', action='store_true', default=False, help="skip converting to pdf")
+    parser.add_argument('-o', '--output', default=os.getcwd(),
+                        type=str, help="download location")
+    parser.add_argument('--nopdf', action='store_true',
+                        default=False, help="skip converting to pdf")
     # parser.add_argument('--combine')
     # Next release will include a combine feature.
 
@@ -44,10 +47,11 @@ def get_urls():
     return urls
 
 
-def save_as_pdf(url, dest, config):
+def save_as_pdf(url, dest):
     # For saving the web page in PDF format.
-    title = dest + '\\' + url.split('/')[-2].replace(' ', '_') + '.pdf'
-    pdfkit.from_url(url, title, configuration=config)
+
+    title = dest + delimiter + url.split('/')[-2].replace(' ', '_') + '.pdf'
+    pdfkit.from_url(url, title)
 
 
 def save_as_html(url, dest):
@@ -64,8 +68,9 @@ def main(args):
     length = len(urls)
 
     for i, url in enumerate(urls):
+        print("Downloading {} of {} ...".format(i + 1, length))
+
         if args.nopdf:
-            print("Downloading {} of {} ...".format(i + 1, length))
             try:
                 save_as_html(url, dest=args.output)
             except KeyboardInterrupt:
@@ -76,30 +81,36 @@ def main(args):
                 print(e)
                 sys.exit(1)
 
-        '''
         else:
 
             if sys.platform == 'win32':
-                if os.path.exists("C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe"):
+                if os.path.exists(
+                        "C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe"):
                     path_wkthmltopdf = "C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe"
                 else:
                     path_wkthmltopdf = "C:\\Program Files (x86)\\wkhtmltopdf\\bin\\wkhtmltopdf.exe"
-                config = pdfkit.configuration(wkhtmltopdf=path_wkthmltopdf)
+                # config = pdfkit.configuration(wkhtmltopdf=path_wkthmltopdf)
+                # ^ to be configured for Windows
 
             # Else, manually specify a custom path.
 
             try:
-                save_as_pdf(url, args.output, config)
+                save_as_pdf(url, args.output)
             except KeyboardInterrupt:
                 print("Process terminated by the user.")
                 sys.exit()
             except Exception as e:
                 print(e)
                 pass
-        '''
 
 
 if __name__ == '__main__':
     urls = None
     user_os = platform.system()
+
+    if user_os == 'Windows':
+        delimiter = '\\'
+    else:
+        delimiter = '//'
+
     argument_parser()

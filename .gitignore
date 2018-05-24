@@ -2,3 +2,5 @@
 temp.py
 temp
 venv
+*.orig
+.coafile

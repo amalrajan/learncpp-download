@@ -1,5 +1,6 @@
 import urllib.request
 import bs4 as bs
+import platform
 import argparse
 import pdfkit
 import sys
@@ -14,6 +15,13 @@ def argument_parser():
     # Next release will include a combine feature.
 
     args = parser.parse_args()
+
+    if args.output[-1] not in ('/', '\''):
+        if user_os == 'Windows':
+            args.output += '\''
+        elif user_os == 'Linux':
+            args.output += '/'
+
     sys.stdout.write(str(main(args)))
 
 
@@ -37,7 +45,7 @@ def get_urls():
 
 
 def save_as_pdf(url, dest, config):
-    # For saving the webpage in PDF format.
+    # For saving the web page in PDF format.
     title = dest + '\\' + url.split('/')[-2].replace(' ', '_') + '.pdf'
     pdfkit.from_url(url, title, configuration=config)
 
@@ -56,8 +64,8 @@ def main(args):
     length = len(urls)
 
     for i, url in enumerate(urls):
-        print("Downloading {} of {} ...".format(i + 1, length))
         if args.nopdf:
+            print("Downloading {} of {} ...".format(i + 1, length))
             try:
                 save_as_html(url, dest=args.output)
             except KeyboardInterrupt:
@@ -68,6 +76,7 @@ def main(args):
                 print(e)
                 sys.exit(1)
 
+        '''
         else:
 
             if sys.platform == 'win32':
@@ -84,10 +93,13 @@ def main(args):
             except KeyboardInterrupt:
                 print("Process terminated by the user.")
                 sys.exit()
-            except:
+            except Exception as e:
+                print(e)
                 pass
+        '''
 
 
 if __name__ == '__main__':
     urls = None
+    user_os = platform.system()
     argument_parser()

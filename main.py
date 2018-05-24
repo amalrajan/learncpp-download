@@ -85,10 +85,13 @@ def main(args):
 
             if sys.platform == 'win32':
                 if os.path.exists(
-                        "C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe"):
-                    path_wkthmltopdf = "C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe"
+                        "C:\\Program Files\\wkhtmltopdf\\bin\\"
+                        "wkhtmltopdf.exe"):
+                    path_wkthmltopdf = \
+                        "C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe"
                 else:
-                    path_wkthmltopdf = "C:\\Program Files (x86)\\wkhtmltopdf\\bin\\wkhtmltopdf.exe"
+                    path_wkthmltopdf = "C:\\Program Files (x86)\\wkhtmltopdf" \
+                                       "\\bin\\wkhtmltopdf.exe"
                 # config = pdfkit.configuration(wkhtmltopdf=path_wkthmltopdf)
                 # ^ to be configured for Windows
 

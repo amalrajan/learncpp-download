@@ -18,8 +18,13 @@ You may test it for yourself, modify or use any part of the code in your own scr
 
 You should have Python 3 and the Python launcher installed on your system. 
 
+#### Installing additional dependencies
+
+Visit https://wkhtmltopdf.org/downloads.html to download and configure the package for Windows users.
+
+#### Cloning the repository
 ```
-git clone https://github.com/lollichop/www.learncpp.com-Crawler.git
+git clone https://github.com/amalrajan/www.learncpp.com-Crawler.git
 cd www.learncpp.cm-Crawler
 ```
 ###### If multiple versions of Python is installed, use: `py -3.6 main.py [args]`
@@ -29,19 +34,43 @@ cd www.learncpp.cm-Crawler
 
 You should have Python 3 installed on your system.
 
+#### Installing additional dependencies
+
 ```
-git clone https://github.com/lollichop/www.learncpp.com-Crawler.git
+sudo apt install wkhtmltopdf
+```
+
+#### Cloning the repository
+
+```
+git clone https://github.com/amalrajan/www.learncpp.com-Crawler.git
 cd www.learncpp.cm-Crawler
 python3 main.py [args]
 ```
 
 ## Usage
 
-```
-main.py [-h] [-o OUTPUT] [--nopdf]
+### Windows
 
+```
+py -3.6 main.py [-h] [-o OUTPUT] [--nopdf]
+```
+
+### Linux
+
+```
+python3 main.py [-h] [-o OUTPUT] [--nopdf]
+```
+
+```
 optional arguments:
   -h, --help                    show this help message and exit
   -o OUTPUT, --output OUTPUT    download location
   --nopdf                       save the webpages as html
  ```
+ 
+ #### Example usage
+ 
+ ```
+python3 main.py --output "/home/amalr/"
+```

@@ -46,7 +46,6 @@ def save_as_html(url, dest):
     # For saving web pages to the permanent storage media.
     data = urllib.request.urlopen(url).read()
     title = url.split('/')[-2].replace(' ', '_') + '.html'
-
     with open("{}\{}".format(dest, title), 'wb') as f:
         f.write(data)
 
@@ -57,15 +56,16 @@ def main(args):
     length = len(urls)
 
     for i, url in enumerate(urls):
-        print("Downloading {} of {} ...".format(i+1, length))
+        print("Downloading {} of {} ...".format(i + 1, length))
         if args.nopdf:
             try:
                 save_as_html(url, dest=args.output)
             except KeyboardInterrupt:
                 print("Process terminated by the user.")
                 sys.exit()
-            except:
+            except Exception as e:
                 print("Process failed.")
+                print(e)
                 sys.exit(1)
 
         else:
@@ -86,6 +86,7 @@ def main(args):
                 sys.exit()
             except:
                 pass
+
 
 if __name__ == '__main__':
     urls = None

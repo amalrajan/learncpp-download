@@ -1,4 +1,4 @@
 Python 3x
-BeautifulSoup4
-PyQt4
-BeautifulSoup4
+beautifulsoup4
+pdfkit
+lxml

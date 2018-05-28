@@ -1,6 +1,7 @@
 # www.learncpp.com Website Crawler
 
-![](https://img.shields.io/badge/windows%20build-failing-red.svg) ![](https://img.shields.io/badge/linux%20build-passing-brightgreen.svg)
+[![Build Status](https://travis-ci.org/amalrajan/learncpp-offline.svg?branch=master)](https://travis-ci.org/amalrajan/learncpp-offline)
+[![codecov](https://codecov.io/gh/amalrajan/learncpp-offline/branch/master/graph/badge.svg)](https://codecov.io/gh/amalrajan/learncpp-offline)
 
 
 _The primary aim is demonstrate how to fetch tutorials from www.learncpp.com and store them in PDF format for offline viewing using Python._

@@ -1,5 +1,8 @@
 # www.learncpp.com Website Crawler
 
+![](https://img.shields.io/badge/windows%20build-failing-red.svg) ![](https://img.shields.io/badge/linux%20build-passing-brightgreen.svg)
+
+
 _The primary aim is demonstrate how to fetch tutorials from www.learncpp.com and store them in PDF format for offline viewing using Python._
 
 ## Important

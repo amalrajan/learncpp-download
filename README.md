@@ -28,7 +28,7 @@ Visit https://wkhtmltopdf.org/downloads.html to download and configure the packa
 
 #### Cloning the repository
 ```
-git clone https://github.com/amalrajan/www.learncpp.com-Crawler.git
+git clone https://github.com/amalrajan/learncpp-offline.git
 cd www.learncpp.cm-Crawler
 ```
 ###### If multiple versions of Python is installed, use: `py -3.6 main.py [args]`
@@ -47,7 +47,7 @@ sudo apt install wkhtmltopdf
 #### Cloning the repository
 
 ```
-git clone https://github.com/amalrajan/www.learncpp.com-Crawler.git
+git clone https://github.com/amalrajan/learncpp-offline.git
 cd www.learncpp.cm-Crawler
 python3 main.py [args]
 ```

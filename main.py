@@ -21,9 +21,9 @@ def argument_parser():
 
     if args.output[-1] not in ('/', '\''):
         if user_os == 'Windows':
-            args.output += '\''
+            args.output += "\\"
         elif user_os == 'Linux':
-            args.output += '/'
+            args.output += "//"
 
     sys.stdout.write(str(main(args)))
 
@@ -40,7 +40,7 @@ def get_urls():
     for i in soup.find_all('a'):
         url = i.get('href')
         if url and 'cpp-tutorial' in url:
-            if 'http://' not in url:
+            if 'http' not in url or 'https' not in url:
                 url = "http://www.learncpp.com" + url
             urls += (url,)
 
@@ -50,7 +50,7 @@ def get_urls():
 def save_as_pdf(url, dest):
     # For saving the web page in PDF format.
 
-    title = dest + delimiter + url.split('/')[-2].replace(' ', '_') + '.pdf'
+    title = dest  + url.split('/')[-2].replace(' ', '_') + '.pdf'
     pdfkit.from_url(url, title)
 
 
@@ -85,13 +85,10 @@ def main(args):
 
             if sys.platform == 'win32':
                 if os.path.exists(
-                        "C:\\Program Files\\wkhtmltopdf\\bin\\"
-                        "wkhtmltopdf.exe"):
-                    path_wkthmltopdf = \
-                        "C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe"
+                        "C:\\Program Files\\wkhtmltopdf\\bin"):
+                    path_wkthmltopdf = "C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe"
                 else:
-                    path_wkthmltopdf = "C:\\Program Files (x86)\\wkhtmltopdf" \
-                                       "\\bin\\wkhtmltopdf.exe"
+                    path_wkthmltopdf = "C:\\Program Files (x86)\\wkhtmltopdf\\bin\\wkhtmltopdf.exe"
                 # config = pdfkit.configuration(wkhtmltopdf=path_wkthmltopdf)
                 # ^ to be configured for Windows
 
@@ -104,7 +101,7 @@ def main(args):
                 sys.exit()
             except Exception as e:
                 print(e)
-                pass
+                sys.exit(1)
 
 
 if __name__ == '__main__':
@@ -112,8 +109,8 @@ if __name__ == '__main__':
     user_os = platform.system()
 
     if user_os == 'Windows':
-        delimiter = '\\'
+        delimiter = "\\"
     else:
-        delimiter = '//'
+        delimiter = "//"
 
     argument_parser()

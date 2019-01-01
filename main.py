@@ -49,9 +49,13 @@ def get_urls():
 
 def save_as_pdf(url, dest):
     # For saving the web page in PDF format.
+    global index
 
-    title = dest  + url.split('/')[-2].replace(' ', '_') + '.pdf'
+    title_from_url = url.split('/')[-2].replace(' ', '_')
+    title_prettified = ' '.join([i.capitalize() for i in title_from_url.split('-')])
+    title = dest + str(index) + ' ' + title_prettified + '.pdf'
     pdfkit.from_url(url, title)
+    index += 1
 
 
 def save_as_html(url, dest):
@@ -107,6 +111,7 @@ def main(args):
 if __name__ == '__main__':
     urls = None
     user_os = platform.system()
+    index = 1
 
     if user_os == 'Windows':
         delimiter = "\\"

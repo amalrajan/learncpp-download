@@ -41,7 +41,7 @@ def get_urls():
         url = i.get('href')
         if url and 'cpp-tutorial' in url:
             if 'http' not in url or 'https' not in url:
-                url = "http://www.learncpp.com" + url
+                url = "http://www.learncpp.com" + url + "\print"
             urls += (url,)
 
     return urls

@@ -1,7 +1,7 @@
 # www.learncpp.com Website Crawler
 
-[![Build Status](https://travis-ci.org/amalrajan/learncpp-offline.svg?branch=master)](https://travis-ci.org/amalrajan/learncpp-offline)
-[![codecov](https://codecov.io/gh/amalrajan/learncpp-offline/branch/master/graph/badge.svg)](https://codecov.io/gh/amalrajan/learncpp-offline)
+[![Build Status](https://travis-ci.org/amalrajan/learncpp-download.svg?branch=master)](https://travis-ci.org/amalrajan/learncpp-download)
+[![codecov](https://codecov.io/gh/amalrajan/learncpp-download/branch/master/graph/badge.svg)](https://codecov.io/gh/amalrajan/learncpp-download)
 
 
 _The primary aim is demonstrate how to fetch tutorials from www.learncpp.com and store them in PDF format for offline viewing using Python._
@@ -41,7 +41,7 @@ Visit https://wkhtmltopdf.org/downloads.html to download and configure the packa
 
 #### Cloning the repository
 ```
-git clone https://github.com/amalrajan/learncpp-offline.git
+git clone https://github.com/amalrajan/learncpp-download.git
 cd www.learncpp.cm-Crawler
 ```
 ###### If multiple versions of Python is installed, use: `py -3.6 main.py [args]`
@@ -60,7 +60,7 @@ sudo apt install wkhtmltopdf
 #### Cloning the repository
 
 ```
-git clone https://github.com/amalrajan/learncpp-offline.git
+git clone https://github.com/amalrajan/learncpp-download.git
 cd www.learncpp.cm-Crawler
 python3 main.py [args]
 ```

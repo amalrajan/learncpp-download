@@ -31,49 +31,28 @@ _Visit https://www.learncpp.com/about/#Support_
 
 ## Installation 
 
-### Windows
+Please note, Python 2 is not supported.
 
-You should have Python 3 and the Python launcher installed on your system. 
-
-#### Installing additional dependencies
-
-Visit https://wkhtmltopdf.org/downloads.html to download and configure the package for Windows users.
-
-#### Cloning the repository
 ```
 git clone https://github.com/amalrajan/learncpp-download.git
 cd learncpp-download
+
+pip install -r requirements.txt
 ```
-###### If multiple versions of Python is installed, use: `py -3.6 main.py [args]`
-###### Otherwise, `python main.py [args]`
+
+### Windows
+
+Visit https://wkhtmltopdf.org/downloads.html to download and configure the package for Windows users.
+
 
 ### Linux
-
-You should have Python 3 installed on your system.
-
-#### Installing additional dependencies
 
 ```
 sudo apt install wkhtmltopdf
 ```
 
-#### Cloning the repository
-
-```
-git clone https://github.com/amalrajan/learncpp-download.git
-cd learncpp-download
-python3 main.py [args]
-```
 
 ## Usage
-
-### Windows
-
-```
-py -3.6 main.py [-h] [-o OUTPUT] [--nopdf]
-```
-
-### Linux
 
 ```
 python3 main.py [-h] [-o OUTPUT] [--nopdf]
@@ -86,8 +65,3 @@ optional arguments:
   --nopdf                       save the webpages as html
  ```
  
- #### Example usage
- 
- ```
-python3 main.py --output "/home/amalr/"
-```

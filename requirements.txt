@@ -1,4 +1,3 @@
-Python 3x
 beautifulsoup4
 pdfkit
 lxml

@@ -54,7 +54,8 @@ def save_as_pdf(url, dest):
     title_from_url = url.split('/')[-2].replace(' ', '_')
     title_prettified = ' '.join([i.capitalize() for i in title_from_url.split('-')])
     title = dest + str(index) + ' ' + title_prettified + '.pdf'
-    pdfkit.from_url(url, title)
+    options = {'cookie': [('ezCMPCookieConsent', '-1=1|1=1|2=1|3=1|4=1')]}
+    pdfkit.from_url(url, title, options=options)
     index += 1
 
 

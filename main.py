@@ -30,9 +30,9 @@ def argument_parser():
 
 def get_urls():
     # Scrapes the URLs off the website.
-    global urls
-
-    sauce = urllib.request.urlopen("http://www.learncpp.com").read()
+    from urllib.request import Request, urlopen
+    req = Request('http://www.learncpp.com', headers={'User-Agent': 'Mozilla/5.0'})
+    sauce = urlopen(req).read()
     soup = bs.BeautifulSoup(sauce, 'lxml')
 
     urls = ()
@@ -54,14 +54,16 @@ def save_as_pdf(url, dest):
     title_from_url = url.split('/')[-2].replace(' ', '_')
     title_prettified = ' '.join([i.capitalize() for i in title_from_url.split('-')])
     title = dest + str(index) + ' ' + title_prettified + '.pdf'
-    options = {'cookie': [('ezCMPCookieConsent', '-1=1|1=1|2=1|3=1|4=1')]}
+    options = {'cookie': [('ezCMPCookieConsent', '-1=1|1=1|2=1|3=1|4=1')], 'disable-javascript':None}
     pdfkit.from_url(url, title, options=options)
     index += 1
 
 
 def save_as_html(url, dest):
     # For saving web pages to the permanent storage media.
-    data = urllib.request.urlopen(url).read()
+    from urllib.request import Request, urlopen
+    req = Request(url, headers={'User-Agent': 'Mozilla/5.0'})
+    data = urlopen(req).read()
     title = url.split('/')[-2].replace(' ', '_') + '.html'
     with open("{}\{}".format(dest, title), 'wb') as f:
         f.write(data)

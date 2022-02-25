@@ -1,5 +1,6 @@
 # learncpp -> PDF
 
+Just got significantly faster, thanks to parallel processing ⚡
 
 ## Support ❤️
 
@@ -23,6 +24,13 @@ On Linux/MacOS system, you should install this package using your package manage
 ```
 python main.py
 ```
+
+## Parallel processing
+Thanks to https://github.com/ray-project/ray, the processing time is now reduced to ~5 seconds from the previous 300 seconds, on a decent system.
+Watch out, this uses a lot more CPU and memory as shown:
+..
+
+If the script becomes unresponsive, try an older version which downloads tutorials in a sequential fashion.
 
 ## Facing trouble?
 

@@ -1,124 +1,88 @@
-import argparse
-import os
-import platform
-import sys
-import urllib.request
-
-import bs4 as bs
+from urllib.request import Request, urlopen
+from bs4 import BeautifulSoup
+import logging
 import pdfkit
+import time
+import sys
+import os
 
 
-def argument_parser():
-    parser = argparse.ArgumentParser()
-    parser.add_argument('-o', '--output', default=os.getcwd(),
-                        type=str, help="download location")
-    parser.add_argument('--nopdf', action='store_true',
-                        default=False, help="skip converting to pdf")
-    # parser.add_argument('--combine')
-    # Next release will include a combine feature.
+def get_urls(cooldown=0):
+    '''
+    Scrapes the URLs off the website.
 
-    args = parser.parse_args()
+    :param int cooldown: specify the sleep duration in seconds, between successive requests
+    '''
 
-    if args.output[-1] not in ('/', '\''):
-        if user_os == 'Windows':
-            args.output += "\\"
-        elif user_os == 'Linux':
-            args.output += "//"
-
-    sys.stdout.write(str(main(args)))
-
-
-def get_urls():
-    # Scrapes the URLs off the website.
-    from urllib.request import Request, urlopen
     req = Request('http://www.learncpp.com', headers={'User-Agent': 'Mozilla/5.0'})
     sauce = urlopen(req).read()
-    soup = bs.BeautifulSoup(sauce, 'lxml')
+    soup = BeautifulSoup(sauce, 'lxml')
 
-    urls = ()
+    urls = []
+    sno = 1
 
-    for i in soup.find_all('a'):
-        url = i.get('href')
+    for tutorial in soup.find_all('a'):
+        url = tutorial.get('href')
         if url and 'cpp-tutorial' in url:
             if 'http' not in url or 'https' not in url:
-                url = "http://www.learncpp.com" + url + "\print"
-            urls += (url,)
+                url = "http://www.learncpp.com" + url
+            urls.append((sno, url))
+            sno += 1
+        if cooldown:
+            time.sleep(cooldown)
 
     return urls
 
 
-def save_as_pdf(url, dest):
-    # For saving the web page in PDF format.
-    global index
+def convert_to_pdf(urls, cooldown=0, recursion_depth=0):
+    '''
+    Converts each webpage and saves them as PDF format.
 
-    title_from_url = url.split('/')[-2].replace(' ', '_')
-    title_prettified = ' '.join([i.capitalize() for i in title_from_url.split('-')])
-    title = dest + str(index) + ' ' + title_prettified + '.pdf'
-    options = {'cookie': [('ezCMPCookieConsent', '-1=1|1=1|2=1|3=1|4=1')], 'disable-javascript':None}
-    pdfkit.from_url(url, title, options=options)
-    index += 1
+    :param List urls: a list of URLs
+    :param int cooldown: cooldown time between successive downloads
+    '''
+    if not os.path.exists('download'):
+        os.makedirs('download')
+    total = len(urls)
+    failed_urls = []
 
+    for sno, url in urls:
+        logging.info(f'downloading: {url}')
+        filename = 'download/' + str(sno).zfill(3) + '-' + url.split('/')[-2] + '.pdf'
+        options = {
+            'cookie': [('ezCMPCookieConsent', '-1=1|1=1|2=1|3=1|4=1')], 'disable-javascript': None,
+            'page-size': 'A4',
+            'margin-top': '0',
+            'margin-bottom': '0',
+            'margin-left': '0',
+            'margin-right': '0'
+        }
+        try:
+            pdfkit.from_url(url, filename, options=options)
+        except Exception as e:
+            logging.error(f'unable to download: {url}')
+            failed_urls.append(url)
 
-def save_as_html(url, dest):
-    # For saving web pages to the permanent storage media.
-    from urllib.request import Request, urlopen
-    req = Request(url, headers={'User-Agent': 'Mozilla/5.0'})
-    data = urlopen(req).read()
-    title = url.split('/')[-2].replace(' ', '_') + '.html'
-    with open("{}\{}".format(dest, title), 'wb') as f:
-        f.write(data)
+        progress(sno, total)
+        time.sleep(cooldown)
 
-
-def main(args):
-    # Main function.
-    urls = get_urls()
-    length = len(urls)
-
-    for i, url in enumerate(urls):
-        print("Downloading {} of {} ...".format(i + 1, length))
-
-        if args.nopdf:
-            try:
-                save_as_html(url, dest=args.output)
-            except KeyboardInterrupt:
-                print("Process terminated by the user.")
-                sys.exit()
-            except Exception as e:
-                print("Process failed.")
-                print(e)
-                sys.exit(1)
-
-        else:
-
-            if sys.platform == 'win32':
-                if os.path.exists(
-                        "C:\\Program Files\\wkhtmltopdf\\bin"):
-                    path_wkthmltopdf = "C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe"
-                else:
-                    path_wkthmltopdf = "C:\\Program Files (x86)\\wkhtmltopdf\\bin\\wkhtmltopdf.exe"
-                # config = pdfkit.configuration(wkhtmltopdf=path_wkthmltopdf)
-                # ^ to be configured for Windows
-
-            # Else, manually specify a custom path.
-
-            try:
-                save_as_pdf(url, args.output)
-            except KeyboardInterrupt:
-                print("Process terminated by the user.")
-                sys.exit()
-            except Exception as e:
-                print(e)
-                sys.exit(1)
+    if failed_urls and not recursion_depth:
+        logging.warn('attempting re-download for failed URLs')
+        convert_to_pdf(failed_urls, recursion_depth=1)
 
 
-if __name__ == '__main__':
-    urls = None
-    user_os = platform.system()
-    index = 1
 
-    if user_os == 'Windows':
-        delimiter = "\\"
-    else:
-        delimiter = "//"
+def progress(count, total, status=''):
+    bar_len = 60
+    filled_len = int(round(bar_len * count / float(total)))
 
-    argument_parser()
+    percents = round(100.0 * count / float(total), 1)
+    bar = '=' * filled_len + '-' * (bar_len - filled_len)
+
+    sys.stdout.write('[%s] %s%s ...%s\r' % (bar, percents, '%', status))
+    sys.stdout.flush()
+
+logging.basicConfig(level=logging.WARN, format='%(asctime)s - %(message)s', datefmt='%d-%b-%y %H:%M:%S')
+
+urls = get_urls()
+convert_to_pdf(urls)

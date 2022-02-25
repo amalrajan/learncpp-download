@@ -3,6 +3,7 @@ from bs4 import BeautifulSoup
 import logging
 import pdfkit
 import time
+import ray
 import sys
 import os
 
@@ -33,6 +34,24 @@ def get_urls(cooldown=0):
 
     return urls
 
+@ray.remote
+def download_file(sno, url, failed_urls, cooldown=0):
+    filename = 'download/' + \
+        str(sno).zfill(3) + '-' + url.split('/')[-2] + '.pdf'
+    options = {
+        'cookie': [('ezCMPCookieConsent', '-1=1|1=1|2=1|3=1|4=1')], 'disable-javascript': None,
+        'page-size': 'A4',
+        'margin-top': '0',
+        'margin-bottom': '0',
+        'margin-left': '0',
+        'margin-right': '0'
+    }
+    try:
+        pdfkit.from_url(url, filename, options=options)
+    except Exception as e:
+        logging.error(f'unable to download: {url}')
+        failed_urls.append((sno, url))
+
 
 def convert_to_pdf(urls, cooldown=0, recursion_depth=0):
     '''
@@ -45,29 +64,18 @@ def convert_to_pdf(urls, cooldown=0, recursion_depth=0):
         os.makedirs('download')
     total = len(urls)
     failed_urls = []
+    futures = []
 
     it = 1
     for sno, url in urls:
         logging.info(f'downloading: {url}')
-        filename = 'download/' + \
-            str(sno).zfill(3) + '-' + url.split('/')[-2] + '.pdf'
-        options = {
-            'cookie': [('ezCMPCookieConsent', '-1=1|1=1|2=1|3=1|4=1')], 'disable-javascript': None,
-            'page-size': 'A4',
-            'margin-top': '0',
-            'margin-bottom': '0',
-            'margin-left': '0',
-            'margin-right': '0'
-        }
-        try:
-            pdfkit.from_url(url, filename, options=options)
-        except Exception as e:
-            logging.error(f'unable to download: {url}')
-            failed_urls.append((sno, url))
-
+        futures.append(download_file.remote(sno, url, failed_urls, cooldown))
+        # download_file(sno, url, failed_urls, cooldown)
         progress(it, total)
         it += 1
         time.sleep(cooldown)
+
+    ray.get(futures)
 
     if failed_urls and not recursion_depth:
         logging.warn('attempting re-download for failed URLs')
@@ -88,5 +96,8 @@ def progress(count, total, status=''):
 logging.basicConfig(level=logging.WARN,
                     format='%(asctime)s - %(message)s', datefmt='%d-%b-%y %H:%M:%S')
 
+
+ray.init()
+
 urls = get_urls()
-convert_to_pdf(urls[:20])
+convert_to_pdf(urls)

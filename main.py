@@ -14,7 +14,8 @@ def get_urls(cooldown=0):
     :param int cooldown: specify the sleep duration in seconds, between successive requests
     '''
 
-    req = Request('http://www.learncpp.com', headers={'User-Agent': 'Mozilla/5.0'})
+    req = Request('http://www.learncpp.com',
+                  headers={'User-Agent': 'Mozilla/5.0'})
     sauce = urlopen(req).read()
     soup = BeautifulSoup(sauce, 'lxml')
 
@@ -28,8 +29,7 @@ def get_urls(cooldown=0):
                 url = "http://www.learncpp.com" + url
             urls.append((sno, url))
             sno += 1
-        if cooldown:
-            time.sleep(cooldown)
+        time.sleep(cooldown)
 
     return urls
 
@@ -46,9 +46,11 @@ def convert_to_pdf(urls, cooldown=0, recursion_depth=0):
     total = len(urls)
     failed_urls = []
 
+    it = 1
     for sno, url in urls:
         logging.info(f'downloading: {url}')
-        filename = 'download/' + str(sno).zfill(3) + '-' + url.split('/')[-2] + '.pdf'
+        filename = 'download/' + \
+            str(sno).zfill(3) + '-' + url.split('/')[-2] + '.pdf'
         options = {
             'cookie': [('ezCMPCookieConsent', '-1=1|1=1|2=1|3=1|4=1')], 'disable-javascript': None,
             'page-size': 'A4',
@@ -61,15 +63,15 @@ def convert_to_pdf(urls, cooldown=0, recursion_depth=0):
             pdfkit.from_url(url, filename, options=options)
         except Exception as e:
             logging.error(f'unable to download: {url}')
-            failed_urls.append(url)
+            failed_urls.append((sno, url))
 
-        progress(sno, total)
+        progress(it, total)
+        it += 1
         time.sleep(cooldown)
 
     if failed_urls and not recursion_depth:
         logging.warn('attempting re-download for failed URLs')
-        convert_to_pdf(failed_urls, recursion_depth=1)
-
+        convert_to_pdf(failed_urls, cooldown=2, recursion_depth=1)
 
 
 def progress(count, total, status=''):
@@ -82,7 +84,9 @@ def progress(count, total, status=''):
     sys.stdout.write('[%s] %s%s ...%s\r' % (bar, percents, '%', status))
     sys.stdout.flush()
 
-logging.basicConfig(level=logging.WARN, format='%(asctime)s - %(message)s', datefmt='%d-%b-%y %H:%M:%S')
+
+logging.basicConfig(level=logging.WARN,
+                    format='%(asctime)s - %(message)s', datefmt='%d-%b-%y %H:%M:%S')
 
 urls = get_urls()
-convert_to_pdf(urls)
+convert_to_pdf(urls[:20])

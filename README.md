@@ -7,7 +7,18 @@ Just got significantly faster, thanks to parallel processing ⚡
 Please support here: https://www.learncpp.com/about/
 
 
-## Installation 
+## Installation
+
+### Docker
+
+```
+docker build -t learnpp-download .
+docker run -d -it --name=learncpp-download -v <host-downloads-path>:/app/downloads learnpp-download
+```
+
+Replace `host-downloads-path` with a local path on your system where you'd want the files
+
+### Local 
 
 ```
 git clone https://github.com/amalrajan/learncpp-download.git

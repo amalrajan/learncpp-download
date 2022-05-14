@@ -1,5 +1,4 @@
 import argparse
-import logging
 
 import ray
 
@@ -15,11 +14,10 @@ def argument_parser():
     return parser.parse_args()
 
 
+ray.init()
 if not argument_parser().weasy:
-    ray.init()
     instance = render.WkRender()
 else:
-    logging.info('Downloading with weasyprint')
     instance = render.WeasyRender()
 
 if __name__ == '__main__':

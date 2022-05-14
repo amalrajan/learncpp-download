@@ -6,7 +6,9 @@ from typing import Optional
 
 import pdfkit
 import ray
+import requests
 import weasyprint
+from xhtml2pdf import pisa
 
 from helper import scraper
 
@@ -14,17 +16,15 @@ from helper import scraper
 class Render:
     download_path = 'downloads'
 
-    def __init__(self, cooldown: Optional[int] = 0) -> None:
+    def __init__(self) -> None:
         self.urls = []
-        self.cooldown = cooldown
-        self.make_download_dir()
 
     def make_download_dir(self) -> None:
         if not os.path.exists(self.download_path):
             os.makedirs(self.download_path)
 
-    def get_urls(self):
-        return scraper.get_urls(self.cooldown)
+    def get_urls(self, cooldown):
+        return scraper.get_urls(cooldown)
 
     @staticmethod
     def get_filename(sno: int, url: str):
@@ -58,15 +58,23 @@ class WkRender(Render):
         'margin-right': '0'
     }
 
-    def __init__(self) -> None:
-        super().__init__()
+    def __init__(self, sequential: Optional[bool] = False) -> None:
+        super(WkRender).__init__()
         self.cooldown = 0
+        self.sequential = sequential
         self.urls = self.get_urls()
+        self.make_download_dir()
 
     def set_cooldown(self, cooldown: int) -> None:
         self.cooldown = cooldown
 
     def download(self) -> None:
+        if self.sequential:
+            self.__download_sequential()
+        else:
+            self.__download()
+
+    def __download(self) -> None:
         futures = []
         for it, url in enumerate(self.urls):
             logging.info(f'Downloading: {url}')
@@ -76,11 +84,21 @@ class WkRender(Render):
 
         ray.get(futures)
 
+    def __download_sequential(self) -> None:
+        for sno, url in enumerate(self.urls):
+            logging.info(f'Downloading: {url}')
+            filename = Render.get_filename(sno, url)
+            pdfkit.from_url(url, filename, options=WkRender.options)
+            Render.progress(sno, len(self.urls))
+            time.sleep(self.cooldown)
+
 
 class WeasyRender(Render):
-    def __init__(self) -> None:
-        super().__init__()
-        self.urls = self.get_urls()
+    def __init__(self, cooldown: Optional[int] = 0) -> None:
+        super(WeasyRender).__init__()
+        self.urls = self.get_urls(cooldown)[:10]
+        self.cooldown = cooldown
+        self.make_download_dir()
 
     def download(self) -> None:
         futures = []
@@ -91,6 +109,21 @@ class WeasyRender(Render):
             time.sleep(self.cooldown)
 
         ray.get(futures)
+
+
+class PisaRender(Render):
+    def __init__(self, cooldown: Optional[int] = 0) -> None:
+        super(PisaRender, self).__init__()
+        self.urls = self.get_urls(cooldown)
+        self.cooldown = cooldown
+        self.make_download_dir()
+
+    def download(self) -> None:
+        for it, url in enumerate(self.urls):
+            logging.info(f'Downloading: {url}')
+            download_pisa(1 + it, url)
+            Render.progress(it, len(self.urls))
+            time.sleep(self.cooldown)
 
 
 @ray.remote
@@ -109,6 +142,16 @@ def ray_download_weasy(sno: int, url: str) -> None:
     pdf = weasyprint.HTML(url).write_pdf()
     filename = Render.get_filename(1 + sno, url)
     open(filename, 'wb').write(pdf)
+
+
+def download_pisa(sno: int, url: str) -> None:
+    filename = Render.get_filename(1 + sno, url)
+    with open(filename, 'wb') as result:
+        html = requests.get(url).text
+        pisa.CreatePDF(
+            html,
+            dest=result
+        )
 
 
 logging.basicConfig(

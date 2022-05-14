@@ -6,6 +6,8 @@ from typing import Optional
 
 import pdfkit
 import ray
+import weasyprint
+
 from helper import scraper
 
 
@@ -13,12 +15,25 @@ class Render:
     download_path = 'downloads'
 
     def __init__(self, cooldown: Optional[int] = 0) -> None:
-        self.urls = scraper.get_urls(cooldown)[:20]
+        self.urls = []
+        self.cooldown = cooldown
         self.make_download_dir()
 
     def make_download_dir(self) -> None:
         if not os.path.exists(self.download_path):
             os.makedirs(self.download_path)
+
+    def get_urls(self):
+        return scraper.get_urls(self.cooldown)[:5]
+
+    @staticmethod
+    def get_filename(sno: int, url: str):
+        return Render.download_path \
+               + '/' \
+               + str(sno).zfill(3) \
+               + '-' \
+               + url.split('/')[-2] \
+               + '.pdf'
 
     @staticmethod
     def progress(count: int, total: int, status: Optional[str] = '') -> None:
@@ -46,11 +61,12 @@ class WkRender(Render):
     def __init__(self) -> None:
         super().__init__()
         self.cooldown = 0
+        self.urls = self.get_urls()
 
-    def set_cooldown(self, cooldown: int):
+    def set_cooldown(self, cooldown: int) -> None:
         self.cooldown = cooldown
 
-    def download(self):
+    def download(self) -> None:
         futures = []
         for it, url in enumerate(self.urls):
             logging.info(f'Downloading: {url}')
@@ -61,14 +77,21 @@ class WkRender(Render):
         ray.get(futures)
 
 
+class WeasyRender(Render):
+    def __init__(self) -> None:
+        super().__init__()
+        self.urls = self.get_urls()
+
+    def download(self) -> None:
+        for sno, url in enumerate(self.urls):
+            pdf = weasyprint.HTML(url).write_pdf()
+            filename = Render.get_filename(1 + sno, url)
+            open(filename, 'wb').write(pdf)
+
+
 @ray.remote
 def ray_download(sno: int, url: str) -> None:
-    filename = Render.download_path \
-               + '/' \
-               + str(sno).zfill(3) \
-               + '-' \
-               + url.split('/')[-2] \
-               + '.pdf'
+    filename = Render.get_filename(sno, url)
 
     try:
         pdfkit.from_url(url, filename, options=WkRender.options)
@@ -81,4 +104,3 @@ logging.basicConfig(
     level=logging.WARN,
     format='%(asctime)s - %(message)s', datefmt='%d-%b-%y %H:%M:%S'
 )
-

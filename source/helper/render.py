@@ -24,7 +24,7 @@ class Render:
             os.makedirs(self.download_path)
 
     def get_urls(self):
-        return scraper.get_urls(self.cooldown)[:5]
+        return scraper.get_urls(self.cooldown)
 
     @staticmethod
     def get_filename(sno: int, url: str):
@@ -83,10 +83,14 @@ class WeasyRender(Render):
         self.urls = self.get_urls()
 
     def download(self) -> None:
-        for sno, url in enumerate(self.urls):
-            pdf = weasyprint.HTML(url).write_pdf()
-            filename = Render.get_filename(1 + sno, url)
-            open(filename, 'wb').write(pdf)
+        futures = []
+        for it, url in enumerate(self.urls):
+            logging.info(f'Downloading: {url}')
+            futures.append(ray_download_weasy.remote(1 + it, url))
+            Render.progress(it, len(self.urls))
+            time.sleep(self.cooldown)
+
+        ray.get(futures)
 
 
 @ray.remote
@@ -98,6 +102,13 @@ def ray_download(sno: int, url: str) -> None:
     except Exception as e:
         logging.error(f'unable to download: {url}')
         logging.exception(e)
+
+
+@ray.remote
+def ray_download_weasy(sno: int, url: str) -> None:
+    pdf = weasyprint.HTML(url).write_pdf()
+    filename = Render.get_filename(1 + sno, url)
+    open(filename, 'wb').write(pdf)
 
 
 logging.basicConfig(

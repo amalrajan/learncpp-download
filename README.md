@@ -12,11 +12,11 @@ Please support here: https://www.learncpp.com/about/
 ### Docker
 
 ```
-docker build -t learnpp-download .
-docker run -d -it --name=learncpp-download -v <host-downloads-path>:/app/downloads learnpp-download
+docker pull amalrajan/learncpp-download:latest
+docker run -d --name=learncpp-download -v <host-downloads-path>:/app/downloads --shm-size=1.14gb amalrajan/learncpp-download
 ```
 
-Replace `host-downloads-path` with a local path on your system where you'd want the files
+Replace `host-downloads-path` with a local path on your system where you'd want the files to get downloaded
 
 ### Local 
 

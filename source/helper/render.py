@@ -96,7 +96,7 @@ class WkRender(Render):
 class WeasyRender(Render):
     def __init__(self, cooldown: Optional[int] = 0) -> None:
         super(WeasyRender).__init__()
-        self.urls = self.get_urls(cooldown)[:10]
+        self.urls = self.get_urls(cooldown)
         self.cooldown = cooldown
         self.make_download_dir()
 

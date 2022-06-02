@@ -23,7 +23,7 @@ msgpack==1.0.3
 numpy==1.22.3
 packaging==21.3
 pdfkit==1.0.0
-Pillow==9.1.0
+Pillow==9.1.1
 platformdirs==2.5.2
 protobuf==3.19.4
 pycparser==2.21

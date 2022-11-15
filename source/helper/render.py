@@ -50,7 +50,7 @@ class Render:
 class WkRender(Render):
     options = {
         'cookie': [('ezCMPCookieConsent', '-1=1|1=1|2=1|3=1|4=1')],
-        'disable-javascript': None,
+        'disable-javascript': True,
         'page-size': 'A4',
         'margin-top': '0',
         'margin-bottom': '0',
@@ -62,7 +62,7 @@ class WkRender(Render):
         super(WkRender).__init__()
         self.cooldown = 0
         self.sequential = sequential
-        self.urls = self.get_urls()
+        self.urls = self.get_urls(self.cooldown)
         self.make_download_dir()
 
     def set_cooldown(self, cooldown: int) -> None:
@@ -139,21 +139,32 @@ def ray_download(sno: int, url: str) -> None:
 
 @ray.remote
 def ray_download_weasy(sno: int, url: str) -> None:
-    pdf = weasyprint.HTML(url).write_pdf()
+    html = requests.get(url).text
+    html = remove_cookie_prompt(html)
+    html_weasy = weasyprint.HTML(html)
+    pdf = html_weasy.write_pdf()
     filename = Render.get_filename(1 + sno, url)
     open(filename, 'wb').write(pdf)
 
 
 def download_pisa(sno: int, url: str) -> None:
     filename = Render.get_filename(1 + sno, url)
+    print(url)
     with open(filename, 'wb') as result:
         html = requests.get(url).text
+        html = remove_cookie_prompt(html)
         pisa.CreatePDF(
             html,
             dest=result
         )
 
-
+from bs4 import BeautifulSoup
+def remove_cookie_prompt(text: str) -> str:
+    soup = BeautifulSoup(text, features="lxml")
+    for s in soup.select('script'):
+      s.extract()
+    return str(soup)
+    
 logging.basicConfig(
     level=logging.WARN,
     format='%(asctime)s - %(message)s', datefmt='%d-%b-%y %H:%M:%S'

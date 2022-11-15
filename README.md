@@ -1,4 +1,12 @@
-# learncpp -> PDF
+<hr/>
+
+## COLAB FORK
+<br/>
+Just run: 
+<div align="center"><a href="https://colab.research.google.com/github/egemenertugrul/learncpp-download/blob/master/LearnCPP_PDF.ipynb" target="_parent"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/></a></div>
+<br/><hr/>
+
+# learncpp -> PDF 
 
 Just got significantly faster, thanks to parallel processing ⚡
 

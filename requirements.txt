@@ -33,7 +33,7 @@ pyphen==0.12.0
 pyrsistent==0.18.1
 PyYAML==6.0
 ray==1.11.0
-redis==4.2.0
+redis==4.4.4
 requests==2.27.1
 six==1.16.0
 soupsieve==2.3.1

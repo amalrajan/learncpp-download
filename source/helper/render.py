@@ -62,7 +62,7 @@ class WkRender(Render):
         super(WkRender).__init__()
         self.cooldown = 0
         self.sequential = sequential
-        self.urls = self.get_urls()
+        self.urls = self.get_urls(self.cooldown)
         self.make_download_dir()
 
     def set_cooldown(self, cooldown: int) -> None:

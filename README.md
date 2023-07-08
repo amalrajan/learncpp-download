@@ -7,7 +7,7 @@ Just got significantly faster, thanks to parallel processing ⚡
 Please support here: https://www.learncpp.com/about/
 
 
-## Installation
+## Execution
 
 ### Docker
 
@@ -18,7 +18,9 @@ docker run -d --name=learncpp-download -v <host-downloads-path>:/app/downloads -
 
 Replace `host-downloads-path` with a local path on your system where you'd want the files to get downloaded
 
-### Local 
+### Local (preferred)
+
+Requires Python 3.10.
 
 ```
 git clone https://github.com/amalrajan/learncpp-download.git
@@ -30,11 +32,13 @@ If you are a Windows user, head over to https://wkhtmltopdf.org/downloads.html a
 On Linux/MacOS system, you should install this package using your package manager: `wkhtmltopdf`
 
 
-## Usage
+#### Usage
 
 ```
 python main.py
 ```
+
+The PDF files will get downloaded into a newly created "downloads" folder, right under "source" directory.
 
 ## Parallel processing
 
@@ -42,8 +46,6 @@ Thanks to https://github.com/ray-project/ray, the processing time is now reduced
 Watch out, this uses a lot more CPU and memory.
 
 <!-- ![image](https://raw.githubusercontent.com/amalrajan/learncpp-download/master/screenshots/Screenshot%202022-02-25%20145949.png) -->
-
-In case the script becomes unresponsive on your system, try an older version which downloads tutorials in a sequential fashion. Example, this tree: https://github.com/amalrajan/learncpp-download/tree/517e8c0818de79d3c0420c2e02f4e11c01c0b878.
 
 ## Facing trouble?
 

@@ -13,10 +13,10 @@ Please support here: https://www.learncpp.com/about/
 
 ```
 docker pull amalrajan/learncpp-download:latest
-docker run -d --name=learncpp-download -v <host-downloads-path>:/app/downloads --shm-size=1.14gb amalrajan/learncpp-download
+docker run --rm --name=learncpp-download --mount type=bind,destination=/app/downloads,source=<host-downloads-path> --shm-size=1.14gb amalrajan/learncpp-download
 ```
 
-Replace `host-downloads-path` with a local path on your system where you'd want the files to get downloaded
+Replace `<host-downloads-path>` with a local path on your system where you'd want the files to get downloaded.
 
 ### Local (preferred)
 

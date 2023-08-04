@@ -1,6 +1,8 @@
-# learncpp -> PDF
+<h1 align="center">LearnCPP Downloader</h1>
 
-Just got significantly faster, thanks to parallel processing ⚡
+<p align="center">
+  An advanced web scraper tool that seamlessly fetches and combines over 200 online tutorials into a convenient offline PDF format.
+</p>
 
 ## Support ❤️
 
@@ -9,30 +11,31 @@ Please support here: https://www.learncpp.com/about/
 
 ## Execution
 
-### Docker
-
-```
-docker pull amalrajan/learncpp-download:latest
-docker run --rm --name=learncpp-download --mount type=bind,destination=/app/downloads,source=<host-downloads-path> --shm-size=1.14gb amalrajan/learncpp-download
-```
-
-Replace `<host-downloads-path>` with a local path on your system where you'd want the files to get downloaded.
-
-### Local (preferred)
-
-Requires Python 3.10.
-
-```
-git clone https://github.com/amalrajan/learncpp-download.git
-cd learncpp-download
-pip install -r requirements.txt
-```
-
-If you are a Windows user, head over to https://wkhtmltopdf.org/downloads.html and configure the package.
+**Pre-requisites**: If you are a Windows user, head over to https://wkhtmltopdf.org/downloads.html and configure the package.
 On Linux/MacOS system, you should install this package using your package manager: `wkhtmltopdf`
 
+1. Local (recommended)
 
-#### Usage
+    Requires Python 3.10.
+
+    ```
+    git clone https://github.com/amalrajan/learncpp-download.git
+    cd learncpp-download
+    pip install -r requirements.txt
+    ```
+2. Docker
+
+    ```
+    docker pull amalrajan/learncpp-download:latest
+    docker run --rm --name=learncpp-download --mount type=bind,destination=/app/downloads,source=<host-downloads-path> --shm-size=1.14gb amalrajan/learncpp-download
+    ```
+
+    Replace `<host-downloads-path>` with a local path on your system where you'd want the files to get downloaded.
+
+
+
+
+## Usage
 
 ```
 python main.py
@@ -53,4 +56,4 @@ Feel free to open a new issue here: https://github.com/amalrajan/learncpp-downlo
 
 ## License
 
-The MIT License
+[The MIT License](https://choosealicense.com/licenses/mit/)

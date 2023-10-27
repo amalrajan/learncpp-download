@@ -38,6 +38,7 @@ On Linux/MacOS system, you should install this package using your package manage
 ## Usage
 
 ```
+cd source
 python main.py
 ```
 

@@ -16,7 +16,7 @@ On Linux/MacOS system, you should install this package using your package manage
 
 1. Local (recommended)
 
-    Requires Python 3.10.
+    Requires Python 3.10. [Create a virtual environment](https://packaging.python.org/en/latest/guides/installing-using-pip-and-virtual-environments/#creating-a-virtual-environment) before running the pip command.
 
     ```
     git clone https://github.com/amalrajan/learncpp-download.git

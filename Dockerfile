@@ -12,4 +12,7 @@ RUN set -ex \
     python3 python3-pip wkhtmltopdf \
     && pip3 install -r requirements.txt
 
-CMD ["scrapy", "crawl",  "learncpp"]
+RUN mkdir -p /run/user/1000 && chown -R 0:0 /run/user/1000
+RUN chmod 0700 /run/user/1000
+
+CMD ["sh", "-c", "export XDG_RUNTIME_DIR=/run/user/1000 && scrapy crawl learncpp"]

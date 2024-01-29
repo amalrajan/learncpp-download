@@ -57,6 +57,7 @@ Run the script
 scrapy crawl learncpp 
 ```
 
+You'll find the downloaded files inside `learncpp` directory under the repository root directory.
 
 ## Facing trouble?
 

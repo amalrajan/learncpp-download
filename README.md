@@ -11,48 +11,56 @@ Please support here: https://www.learncpp.com/about/
 
 ## Execution
 
-**Pre-requisites**: If you are a Windows user, head over to https://wkhtmltopdf.org/downloads.html and configure the package.
-On Linux/MacOS system, you should install this package using your package manager: `wkhtmltopdf`
 
-1. Local (recommended)
+### Docker
 
-    Requires Python 3.10.
-
-    ```
-    git clone https://github.com/amalrajan/learncpp-download.git
-    cd learncpp-download
-    pip install -r requirements.txt
-    ```
-2. Docker
-
-    ```
-    docker pull amalrajan/learncpp-download:latest
-    docker run --rm --name=learncpp-download --mount type=bind,destination=/app/downloads,source=<host-downloads-path> --shm-size=1.14gb amalrajan/learncpp-download
-    ```
-
-    Replace `<host-downloads-path>` with a local path on your system where you'd want the files to get downloaded.
-
-
-
-
-## Usage
-
-```
-python main.py
+Get the image
+```bash
+docker pull amalrajan/learncpp-download:latest
 ```
 
-The PDF files will get downloaded into a newly created "downloads" folder, right under "source" directory.
+And run the container
+```bash
+docker run --rm --name=learncpp-download --mount type=bind,destination=/app/learncpp,source=/home/amalr/temp/downloads amalrajan/learncpp-download
+```
 
-## Parallel processing
+Replace `/home/amalr/temp/downloads` with a local path on your system where you'd want the files to get downloaded.
 
-Thanks to https://github.com/ray-project/ray, the processing time is now reduced to ~5 seconds from the previous 300 seconds, on a decent system.
-Watch out, this uses a lot more CPU and memory.
 
-<!-- ![image](https://raw.githubusercontent.com/amalrajan/learncpp-download/master/screenshots/Screenshot%202022-02-25%20145949.png) -->
+### Local
+
+#### Install these dependencies
+
+1. Python 3.10.12.
+
+2. wkhtmltopdf
+  - Debian based: `sudo apt install wkhtmltopdf`  
+  - macOS: `brew install Caskroom/cask/wkhtmltopdf`
+  - Windows: `choco install wkhtmltopdf` (or simply download it the old fashioned way)
+
+
+#### Run it
+
+Clone the repository
+```bash
+git clone https://github.com/amalrajan/learncpp-download.git
+```
+
+Install Python dependencies
+```bash
+cd learncpp-download
+pip install -r requirements.txt
+```
+
+Run the script
+```bash
+scrapy crawl learncpp 
+```
+
 
 ## Facing trouble?
 
-Feel free to open a new issue here: https://github.com/amalrajan/learncpp-download/issues. Please attach the console logs along.
+Feel free to open a new issue here: https://github.com/amalrajan/learncpp-download/issues. Don't forget to attach those console logs.
 
 ## License
 

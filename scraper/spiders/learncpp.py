@@ -132,11 +132,20 @@ class LearncppSpider(scrapy.Spider):
         pdf_filename = pathlib.Path(filename).with_suffix(".pdf")
 
         # Convert the modified HTML file to PDF
-        pdfkit.from_file(
-            os.path.join(self.name, filename),
-            os.path.join(self.name, pdf_filename),
-            options={"enable-local-file-access": ""},
-        )
+        try:
+            pdfkit.from_file(
+                os.path.join(self.name, filename),
+                os.path.join(self.name, pdf_filename),
+                options={"enable-local-file-access": ""},
+            )
+        except OSError as e:
+            if (
+                "QNetworkReplyImplPrivate::error: Internal problem, this method must only be called once."
+                in str(e)
+            ):
+                # If so, suppress the error
+                pass
+
         self.log(f"Converted {filename} to PDF: {pdf_filename}")
 
     def get_urls(self) -> typing.List[URL]:

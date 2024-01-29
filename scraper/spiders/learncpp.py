@@ -74,7 +74,7 @@ class LearncppSpider(scrapy.Spider):
 
     def clean(self, filename: str) -> None:
         # Read the HTML file
-        with open(os.path.join(self.name, filename), "r") as file:
+        with open(os.path.join(self.name, filename), "r", encoding="utf-8") as file:
             html_content = file.read()
 
         # Parse the HTML content
@@ -111,7 +111,7 @@ class LearncppSpider(scrapy.Spider):
         )
 
         # Save the modified HTML content
-        with open(os.path.join(self.name, filename), "w") as file:
+        with open(os.path.join(self.name, filename), "w", encoding="utf-8") as file:
             file.write(str(soup))
         self.log(f"Saved cleaned HTML for {filename}")
 

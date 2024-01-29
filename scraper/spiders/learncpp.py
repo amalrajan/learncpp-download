@@ -2,6 +2,7 @@ import dataclasses
 import os
 import pathlib
 import threading
+import time
 import typing
 import urllib.request
 
@@ -43,6 +44,10 @@ class LearncppSpider(scrapy.Spider):
                 callback=self.parse,
                 cb_kwargs={"page_index": str(url.index)},
             )
+
+            # Sleep for 200 milliseconds
+            # Adjust this value if you get blocked
+            time.sleep(0.2)
 
     def parse(
         self,

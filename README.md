@@ -1,7 +1,7 @@
 <h1 align="center">LearnCPP Downloader</h1>
 
 <p align="center">
-  An advanced web scraper tool that seamlessly fetches and combines over 200 online tutorials into a convenient offline PDF format.
+  An advanced web scraper tool that seamlessly fetches and combines over 350 online tutorials into a convenient offline PDF format.
 </p>
 
 ## Support ❤️
@@ -31,12 +31,12 @@ Replace `/home/amalr/temp/downloads` with a local path on your system where you'
 
 #### Install these dependencies
 
-1. Python 3.10.12.
+1. Python 3.10.12
 
 2. wkhtmltopdf
   - Debian based: `sudo apt install wkhtmltopdf`  
   - macOS: `brew install Caskroom/cask/wkhtmltopdf`
-  - Windows: `choco install wkhtmltopdf` (or simply download it the old fashioned way)
+  - Windows: `choco install wkhtmltopdf` (or simply download it the old fashioned way). I wouldn't recommend using Windows, as the fonts are a bit weird. Unless of course, you have a thing for weird stuff.
 
 
 #### Run it

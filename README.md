@@ -36,7 +36,7 @@ Replace `/home/amalr/temp/downloads` with a local path on your system where you'
 2. wkhtmltopdf
   - Debian based: `sudo apt install wkhtmltopdf`  
   - macOS: `brew install Caskroom/cask/wkhtmltopdf`
-  - Windows: `choco install wkhtmltopdf` (or simply download it the old fashioned way)
+  - Windows: `choco install wkhtmltopdf` (or simply download it the old fashioned way). I wouldn't recommend using Windows, as the fonts are a bit weird. Unless of course, you have a thing for weird stuff.
 
 
 #### Run it

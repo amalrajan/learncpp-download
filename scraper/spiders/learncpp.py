@@ -1,10 +1,9 @@
 import dataclasses
 import os
 import pathlib
-import threading
-import time
 import typing
 import urllib.request
+from concurrent.futures import ThreadPoolExecutor
 
 import bs4
 import pdfkit
@@ -20,6 +19,13 @@ class URL:
 class LearncppSpider(scrapy.Spider):
     name = "learncpp"
     allowed_domains = ["learncpp.com"]
+
+    # Define ThreadPoolExecutor
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.executor = ThreadPoolExecutor(
+            max_workers=192
+        )  # Limit to 192 concurrent PDF conversions
 
     def create_working_directory(self) -> None:
         # Create a directory named "learncpp" if it doesn't exist
@@ -45,10 +51,6 @@ class LearncppSpider(scrapy.Spider):
                 cb_kwargs={"page_index": str(url.index)},
             )
 
-            # Sleep for 200 milliseconds
-            # Adjust this value if you get blocked
-            time.sleep(0.2)
-
     def parse(
         self,
         response: scrapy.http.response.Response,
@@ -69,7 +71,7 @@ class LearncppSpider(scrapy.Spider):
         self.log(f"Cleaned HTML for {filename}")
 
         # Run convert_to_pdf function in a ThreadPool
-        threading.Thread(target=self.convert_to_pdf, args=(filename,)).start()
+        self.executor.submit(self.convert_to_pdf, filename)
         self.log(f"Started PDF conversion for {filename}")
 
     def clean(self, filename: str) -> None:

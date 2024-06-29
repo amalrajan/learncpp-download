@@ -59,8 +59,12 @@ scrapy crawl learncpp
 
 You'll find the downloaded files inside `learncpp` directory under the repository root directory.
 
-## Facing trouble?
+## FAQ
 
+#### I'm getting rate limit errors. What should I do?
+Go to `settings.py` and set `DOWNLOAD_DELAY` to a higher value. The default is 0. Try setting it to 0.2.
+
+#### Don't see what you are looking for?
 Feel free to open a new issue here: https://github.com/amalrajan/learncpp-download/issues. Don't forget to attach those console logs.
 
 ## License

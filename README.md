@@ -64,6 +64,19 @@ You'll find the downloaded files inside `learncpp` directory under the repositor
 #### I'm getting rate limit errors. What should I do?
 Go to `settings.py` and set `DOWNLOAD_DELAY` to a higher value. The default is 0. Try setting it to 0.2.
 
+
+#### This script is using 100% CPU. What's wrong?
+
+That's the way it is. You can however go ahead and reduce the concurrency factor in `learncpp.py`
+
+```python
+self.executor = ThreadPoolExecutor(
+    max_workers=192
+)  # Limit to 192 concurrent PDF conversions
+```
+
+Chamge `max_workers` to a lower value. The default is 192.
+
 #### Don't see what you are looking for?
 Feel free to open a new issue here: https://github.com/amalrajan/learncpp-download/issues. Don't forget to attach those console logs.
 

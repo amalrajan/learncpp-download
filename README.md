@@ -1,58 +1,50 @@
-<h1 align="center">LearnCPP Downloader</h1>
+# LearnCPP Downloader
 
-<p align="center">
-  Multi-threaded web scraper to download all the tutorials from <a href="https://www.learncpp.com/">www.learncpp.com</a> and convert them to PDF files concurrently.
-</p>
+Multi-threaded web scraper to download all the tutorials from <a href="https://www.learncpp.com/">www.learncpp.com</a> and convert them to PDF files concurrently.
 
 ## Support ❤️
 
-Please support here: https://www.learncpp.com/about/
+Please support here: <https://www.learncpp.com/about/>
 
-
-## Execution
-
+## Usage
 
 ### Docker
 
 Get the image
+
 ```bash
 docker pull amalrajan/learncpp-download:latest
 ```
 
 And run the container
+
 ```bash
 docker run --rm --name=learncpp-download --mount type=bind,destination=/app/learncpp,source=/home/amalr/temp/downloads amalrajan/learncpp-download
 ```
 
 Replace `/home/amalr/temp/downloads` with a local path on your system where you'd want the files to get downloaded.
 
-
 ### Local
 
-#### Install these dependencies
-
-1. Python 3.10.12
-
-2. wkhtmltopdf
-  - Debian based: `sudo apt install wkhtmltopdf`  
-  - macOS: `brew install Caskroom/cask/wkhtmltopdf`
-  - Windows: `choco install wkhtmltopdf` (or simply download it the old fashioned way). I wouldn't recommend using Windows, as the fonts are a bit weird. Unless of course, you have a thing for weird stuff.
-
+You need Python 3.10 and `wkhtmltopdf` installed on your system.
 
 #### Run it
 
 Clone the repository
+
 ```bash
 git clone https://github.com/amalrajan/learncpp-download.git
 ```
 
 Install Python dependencies
+
 ```bash
 cd learncpp-download
 pip install -r requirements.txt
 ```
 
 Run the script
+
 ```bash
 scrapy crawl learncpp 
 ```
@@ -61,13 +53,15 @@ You'll find the downloaded files inside `learncpp` directory under the repositor
 
 ## FAQ
 
-#### I'm getting rate limit errors. What should I do?
-Go to `settings.py` and set `DOWNLOAD_DELAY` to a higher value. The default is 0. Try setting it to 0.2.
+**Rate Limit Errors:**
 
+- Modify `settings.py`.
+- Increase `DOWNLOAD_DELAY` (default: 0) to 0.2.
 
-#### This script is using 100% CPU. What's wrong?
+**High CPU Usage:**
 
-That's the way it is. You can however go ahead and reduce the concurrency factor in `learncpp.py`
+- Adjust `max_workers` in `learncpp.py`.
+- Decrease from default 192 to reduce CPU load.
 
 ```python
 self.executor = ThreadPoolExecutor(
@@ -75,11 +69,10 @@ self.executor = ThreadPoolExecutor(
 )  # Limit to 192 concurrent PDF conversions
 ```
 
-Chamge `max_workers` to a lower value. The default is 192.
+**Further Issues:**
 
-#### Don't see what you are looking for?
-Feel free to open a new issue here: https://github.com/amalrajan/learncpp-download/issues. Don't forget to attach those console logs.
+- Report at <https://github.com/amalrajan/learncpp-download/issues>. Attach console logs.
 
 ## License
 
-[The MIT License](https://choosealicense.com/licenses/mit/)
+[GNU Affero General Public License v3](https://www.gnu.org/licenses/agpl-3.0.en.html)
